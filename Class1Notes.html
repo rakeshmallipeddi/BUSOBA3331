@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>From Data to Decisions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --bg:#F6F6F7;
+  --surface:#FFFFFF;
+  --surface-2:#EEEFF1;
+  --ink:#1A1B1E;
+  --ink-2:#3D4046;
+  --muted:#63676E;
+  --rule:#DFE1E4;
+  --rule-soft:#EAEBEE;
+  --accent:#BB0000;
+  --accent-soft:#F6E4E4;
+  --p1:#12879E;
+  --p2:#9D5C66;
+  --p3:#6B7178;
+  --p4:#C74A42;
+  --p1-fill:#3FC3DB;
+  --p2-fill:#C68C95;
+  --p3-fill:#AFB4B9;
+  --p4-fill:#F79A93;
+  --p1-on:#08262D;
+  --p2-on:#2E1418;
+  --p3-on:#15181B;
+  --p4-on:#34110E;
+  --shadow:0 1px 2px rgba(20,22,26,.05), 0 8px 24px -12px rgba(20,22,26,.14);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141518;
+    --surface:#1C1E22;
+    --surface-2:#232629;
+    --ink:#ECEDEF;
+    --ink-2:#C9CCD1;
+    --muted:#969BA3;
+    --rule:#2E3136;
+    --rule-soft:#26292D;
+    --accent:#FF7A6E;
+    --accent-soft:#33201E;
+    --p1:#5CCCE2;
+    --p2:#D79BA4;
+    --p3:#A7AEB6;
+    --p4:#F9948C;
+    --p1-fill:#4FC0D6;
+    --p2-fill:#BE8790;
+    --p3-fill:#9AA1A9;
+    --p4-fill:#EE8B83;
+    --p1-on:#08262D;
+    --p2-on:#2E1418;
+    --p3-on:#15181B;
+    --p4-on:#34110E;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141518;
+  --surface:#1C1E22;
+  --surface-2:#232629;
+  --ink:#ECEDEF;
+  --ink-2:#C9CCD1;
+  --muted:#969BA3;
+  --rule:#2E3136;
+  --rule-soft:#26292D;
+  --accent:#FF7A6E;
+  --accent-soft:#33201E;
+  --p1:#5CCCE2;
+  --p2:#D79BA4;
+  --p3:#A7AEB6;
+  --p4:#F9948C;
+  --p1-fill:#4FC0D6;
+  --p2-fill:#BE8790;
+  --p3-fill:#9AA1A9;
+  --p4-fill:#EE8B83;
+  --p1-on:#08262D;
+  --p2-on:#2E1418;
+  --p3-on:#15181B;
+  --p4-on:#34110E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Newsreader", Georgia, "Times New Roman", serif;
+  font-size:19px;
+  line-height:1.68;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px 96px;
+}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--rule);
+  padding:56px 0 34px;
+  margin-bottom:48px;
+}
+.eyebrow{
+  font-family:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 18px;
+}
+h1{
+  font-family:"Fraunces", Georgia, serif;
+  font-optical-sizing:auto;
+  font-weight:600;
+  font-size:clamp(38px, 6vw, 60px);
+  line-height:1.04;
+  letter-spacing:-.02em;
+  margin:0 0 20px;
+  text-wrap:balance;
+  max-width:16ch;
+}
+.standfirst{
+  font-size:clamp(19px,2.2vw,22px);
+  color:var(--ink-2);
+  max-width:62ch;
+  margin:0 0 26px;
+  font-weight:300;
+  line-height:1.55;
+}
+.meta{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:12.5px;
+  color:var(--muted);
+  letter-spacing:.02em;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 20px;
+}
+
+/* ---------- layout ---------- */
+.cols{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:56px;
+  align-items:start;
+}
+@media (min-width:1000px){
+  .cols{grid-template-columns:210px minmax(0,1fr);gap:64px}
+}
+
+nav.toc{display:none}
+@media (min-width:1000px){
+  nav.toc{
+    display:block;
+    position:sticky;
+    top:32px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    line-height:1.5;
+  }
+  nav.toc p{
+    margin:0 0 14px;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-size:11px;
+  }
+  nav.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+  nav.toc a{
+    color:var(--muted);
+    text-decoration:none;
+    display:grid;
+    grid-template-columns:24px 1fr;
+    gap:6px;
+    border-left:0;
+  }
+  nav.toc a span{color:var(--muted);opacity:.55;}
+  nav.toc a:hover, nav.toc a:focus-visible{color:var(--accent)}
+  nav.toc a:hover span, nav.toc a:focus-visible span{color:var(--accent)}
+}
+
+article{max-width:70ch}
+
+/* ---------- typography ---------- */
+h2{
+  font-family:"Fraunces", Georgia, serif;
+  font-weight:600;
+  font-size:clamp(27px,3.4vw,34px);
+  line-height:1.15;
+  letter-spacing:-.015em;
+  margin:0 0 8px;
+  text-wrap:balance;
+}
+h3{
+  font-family:"Fraunces", Georgia, serif;
+  font-weight:600;
+  font-size:21px;
+  line-height:1.3;
+  margin:38px 0 10px;
+  text-wrap:balance;
+}
+section{
+  padding-top:58px;
+  scroll-margin-top:24px;
+}
+article > section:first-of-type{padding-top:0}
+section + section{border-top:1px solid var(--rule-soft);}
+.snum{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:11.5px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+  display:block;
+  margin-bottom:14px;
+}
+p{margin:0 0 20px}
+article > p:first-of-type{margin-top:16px}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+ul,ol{margin:0 0 22px;padding-left:1.25em}
+li{margin-bottom:9px}
+li::marker{color:var(--muted)}
+
+/* ---------- callouts ---------- */
+.note{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:3px;
+  padding:22px 24px;
+  margin:0 0 24px;
+  box-shadow:var(--shadow);
+}
+.note .label{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:block;
+  margin-bottom:10px;
+}
+.note p:last-child{margin-bottom:0}
+.note ul:last-child, .note ol:last-child{margin-bottom:0}
+
+.stat{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px 34px;
+  margin:0 0 26px;
+  padding:22px 24px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:3px;
+}
+.stat div{flex:1 1 130px}
+.stat .n{
+  font-family:"Fraunces", Georgia, serif;
+  font-size:34px;
+  font-weight:600;
+  line-height:1;
+  display:block;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+}
+.stat .k{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:block;
+  margin-top:9px;
+  line-height:1.45;
+}
+.stat .a .n{color:var(--p3)}
+.stat .b .n{color:var(--p2)}
+.stat .c .n{color:var(--accent)}
+
+blockquote{
+  margin:0 0 24px;
+  padding:0 0 0 22px;
+  border-left:2px solid var(--accent);
+  font-size:21px;
+  line-height:1.5;
+  color:var(--ink-2);
+  font-weight:300;
+}
+blockquote cite{
+  display:block;
+  font-family:"IBM Plex Mono", monospace;
+  font-style:normal;
+  font-size:11.5px;
+  letter-spacing:.06em;
+  color:var(--muted);
+  margin-top:12px;
+}
+
+/* ---------- temple diagram ---------- */
+figure{margin:0 0 28px;overflow-x:auto}
+figure svg{display:block;width:100%;min-width:440px;height:auto}
+figcaption{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:11.5px;
+  line-height:1.6;
+  color:var(--muted);
+  margin-top:12px;
+}
+
+/* ---------- pillar cards ---------- */
+.pillars{
+  display:grid;
+  gap:14px;
+  margin:0 0 28px;
+  grid-template-columns:minmax(0,1fr);
+}
+@media(min-width:660px){.pillars{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pillar{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:3px;
+  padding:20px 20px 22px;
+}
+.pillar h4{
+  font-family:"Fraunces", Georgia, serif;
+  font-size:19px;
+  font-weight:600;
+  margin:0 0 4px;
+}
+.pillar .q{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:11px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  display:block;
+  margin-bottom:12px;
+}
+.pillar p{font-size:17px;line-height:1.6;margin:0 0 12px;color:var(--ink-2)}
+.pillar p:last-child{margin-bottom:0}
+.pillar .ex{
+  font-size:16px;
+  color:var(--muted);
+  border-top:1px solid var(--rule-soft);
+  padding-top:12px;
+}
+.p-1 h4{color:var(--p1)} .p-1 .q{color:var(--p1)}
+.p-2 h4{color:var(--p2)} .p-2 .q{color:var(--p2)}
+.p-3 h4{color:var(--p3)} .p-3 .q{color:var(--p3)}
+.p-4 h4{color:var(--p4)} .p-4 .q{color:var(--p4)}
+
+/* ---------- definitions of AI ---------- */
+.defs{display:flex;flex-direction:column;gap:16px;margin:0 0 26px}
+.def{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:6px;
+  padding:18px 20px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:3px;
+}
+.def .who{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.def p{margin:0;font-size:17.5px;line-height:1.6;color:var(--ink-2)}
+
+/* ---------- failure list ---------- */
+.fails{list-style:none;padding:0;margin:0 0 26px;display:flex;flex-direction:column;gap:2px}
+.fails li{
+  margin:0;
+  padding:18px 0;
+  border-bottom:1px solid var(--rule-soft);
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:14px;
+}
+.fails li:first-child{border-top:1px solid var(--rule-soft)}
+.fails .idx{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:12px;
+  color:var(--muted);
+  padding-top:4px;
+  font-variant-numeric:tabular-nums;
+}
+.fails h4{
+  font-family:"Fraunces",Georgia,serif;
+  font-size:18.5px;
+  font-weight:600;
+  margin:0 0 5px;
+}
+.fails p{margin:0;font-size:17px;line-height:1.6;color:var(--ink-2)}
+
+/* ---------- glossary ---------- */
+dl.gloss{margin:0 0 20px;display:flex;flex-direction:column;gap:0}
+dl.gloss div{
+  padding:16px 0;
+  border-bottom:1px solid var(--rule-soft);
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:5px;
+}
+dl.gloss div:first-child{border-top:1px solid var(--rule-soft)}
+@media(min-width:720px){
+  dl.gloss div{grid-template-columns:190px minmax(0,1fr);gap:24px}
+}
+dl.gloss dt{
+  font-family:"IBM Plex Mono", monospace;
+  font-size:13px;
+  font-weight:500;
+  line-height:1.5;
+  color:var(--ink);
+  padding-top:3px;
+}
+dl.gloss dd{margin:0;font-size:17.5px;line-height:1.6;color:var(--ink-2)}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important}
+}
+
+footer{
+  margin-top:64px;
+  padding-top:26px;
+  border-top:1px solid var(--rule);
+  font-family:"IBM Plex Mono", monospace;
+  font-size:12px;
+  line-height:1.85;
+  color:var(--muted);
+}
+footer a{color:var(--muted)}
+footer p{margin:0 0 12px;max-width:70ch}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">BUSOBA 3331 / 4331 &middot; Module 1 &middot; Reading notes</p>
+    <h1>From Data to Decisions</h1>
+    <p class="standfirst">What business analytics is, the four kinds of question it answers, how AI fits into the picture, and why so many companies spend money on analytics and get nothing back.</p>
+    <div class="meta">
+      <span>Tactics of Analytical Discovery</span>
+      <span>Fall 2026</span>
+      <span>~20 min read</span>
+    </div>
+  </header>
+
+  <div class="cols">
+
+    <nav class="toc" aria-label="Contents">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#s1"><span>01</span> What analytics is</a></li>
+        <li><a href="#s2"><span>02</span> Where data comes from</a></li>
+        <li><a href="#s3"><span>03</span> An example</a></li>
+        <li><a href="#s4"><span>04</span> Who uses it</a></li>
+        <li><a href="#s5"><span>05</span> The four pillars</a></li>
+        <li><a href="#s6"><span>06</span> What AI is</a></li>
+        <li><a href="#s7"><span>07</span> AI and analytics</a></li>
+        <li><a href="#s8"><span>08</span> AI and jobs</a></li>
+        <li><a href="#s9"><span>09</span> Why AI projects fail</a></li>
+        <li><a href="#gloss"><span>&mdash;</span> Key terms</a></li>
+      </ol>
+    </nav>
+
+    <article>
+
+      <section id="s1">
+        <span class="snum">01</span>
+        <h2>What business analytics is</h2>
+
+        <blockquote>Business analytics is the scientific process of turning data into insights that help people make better decisions.</blockquote>
+
+        <p>Three words in that sentence do most of the work.</p>
+
+        <p><strong>Scientific</strong> means there are rules. You can't just look at some numbers, get a feeling, and put it in a chart. There are correct and incorrect ways to work with data, and the course will teach them.</p>
+
+        <p><strong>Data</strong> means a record of what actually happened — not what someone remembers happening, and not what they think should have happened. People's memories are unreliable. Sales records are not.</p>
+
+        <p><strong>Decisions</strong> is the whole point. If an analysis doesn't change what anyone does, it didn't accomplish anything, no matter how good the math was.</p>
+
+        <div class="note">
+          <span class="label">Core idea</span>
+          <p>Data has value only when it changes what we understand or what we decide to do. A large dataset by itself is not an insight, and an insight that cannot affect a decision may have little practical value.</p>
+        </div>
+
+        <p>The process works like a chain. It starts with <em>data</em>, which is usually messy, usually huge, and not very useful on its own. Then you apply <em>tools and methods</em> — this is what the course teaches. What comes out is <em>information</em>. And if the work was done well, you get an <em>actionable insight</em>: something specific enough that a manager can do something different because of it.</p>
+
+        <p>Companies that get this right tend to see five things: faster and better decisions, new products and services, cheaper and more efficient operations, higher profits, and happier customers. That last one isn't fluff. A customer who got what they wanted is a customer who comes back.</p>
+
+        <p>Consider a retailer deciding how much inventory to place in each store. A manager relying only on intuition may overlook differences in local demand, seasonality, promotions, and substitution across products. An analytics-based approach can combine those signals. The final decision still requires business judgment, because the model may not know about an upcoming competitor, a local event, or a supply disruption that is absent from the historical data.</p>
+
+        <p>Does any of this actually work? Researchers have checked. Brynjolfsson, Hitt and Kim looked at a large group of U.S. companies and split them into two groups: those that really used data to make decisions, and those that didn't. After accounting for how much each company spent on technology and other differences between them, the data-driven group had output and productivity about <strong>5&ndash;6% higher</strong>. Those companies also did better on asset use, return on equity, and market value.</p>
+
+        <div class="note">
+          <span class="label">What 5% means</span>
+          <p>Five percent doesn't sound like much. But it's five percent of everything the company produces, every year, against competitors who are already trying hard. That gap is why companies keep spending money on analytics — and why they hire people who know how to do it.</p>
+        </div>
+      </section>
+
+      <section id="s2">
+        <span class="snum">02</span>
+        <h2>Where the data comes from</h2>
+
+        <p>Analytics works today because people generate an enormous amount of data just by living their normal lives. Scan a loyalty card at the grocery store, and that's a record. Search something on Google. Open Instagram. Click an ad — or don't click it, which also gets recorded. Even carrying a phone around creates a steady stream of location data.</p>
+
+        <p>Each of these is a small, ordinary thing. Added up, they form a trail that follows almost every customer through almost every day.</p>
+
+        <p>So data is now part of every business, not a side project at a few of them. Business analytics is the art and science of turning that data into decisions. Art, because deciding <em>which question to ask</em> takes judgment. Science, because once the question is set, there are right and wrong ways to answer it.</p>
+      </section>
+
+      <section id="s3">
+        <span class="snum">03</span>
+        <h2>An example: doctors and machines</h2>
+
+        <p>A study from 2016 shows the relationship between computers and human experts better than most. A team led by Andrew Beck, then at Beth Israel Deaconess Medical Center and Harvard Medical School, worked with colleagues at MIT and entered a competition called Camelyon16.</p>
+
+        <p>The task was real medical work, not a puzzle invented for the contest. Doctors take a tissue sample from a lymph node, put it on a slide, and look for signs that breast cancer has spread. The team scanned those slides into digital images and tested how well a computer could read them.</p>
+
+        <p>Three results came out:</p>
+
+        <div class="stat">
+          <div class="a"><span class="n">92%</span><span class="k">Machine alone</span></div>
+          <div class="b"><span class="n">96%</span><span class="k">Doctor alone</span></div>
+          <div class="c"><span class="n">99.5%</span><span class="k">Both together</span></div>
+        </div>
+
+        <p>Look at the first two numbers. The doctor beat the machine, 96% to 92%. When mistakes mean missed cancer, that is not a small gap. If you stopped reading here, the obvious conclusion would be that humans are better and the computer isn't worth using.</p>
+
+        <p>Now look at the third number. Let the computer scan the slide and mark the suspicious spots, then let the doctor make the final call, and accuracy goes to 99.5%. Errors drop from about 40 mistakes in every thousand cases down to about 5. Applied across the whole country, the researchers estimated that would mean roughly <strong>56,000 fewer misread breast scans every year in the United States</strong>.</p>
+
+        <p>There are two lessons here.</p>
+
+        <p><strong>The first: the right comparison is usually "human plus machine," not "human versus machine."</strong> The computer and the doctor made <em>different kinds</em> of mistakes. The computer caught things the doctor's eye skipped; the doctor caught things the computer misread. Each one covered for the other's weak spots. That is the real finding, not the raw score of either one.</p>
+
+        <p><strong>The second: none of it works without data.</strong> Before the computer could do anything, the team had to gather a huge number of slide images and label each one correctly. Without that, there is no model. Not a worse model — no model at all. This is why the early weeks of this course are about handling data rather than about algorithms.</p>
+
+        <div class="note">
+          <span class="label">Source note</span>
+          <p>Beck et al., Camelyon16 challenge, ISBI 2016. Harvard Medical School wrote it up as <a href="https://hms.harvard.edu/news/better-together">&ldquo;Better Together.&rdquo;</a> The original paper reports these results using a measure called AUC rather than plain accuracy; the numbers above follow the simpler version used in the lecture.</p>
+        </div>
+      </section>
+
+      <section id="s4">
+        <span class="snum">04</span>
+        <h2>Who uses analytics</h2>
+
+        <p>There is no part of business left where analytics is optional. It shows up in operations, logistics and supply chain, information systems, marketing, finance, accounting, sports, and health care. Here are real examples from several of those areas.</p>
+
+        <ul>
+          <li><strong>Shipping.</strong> UPS built a system called ORION that decides what order a driver should make their stops in. The company says it saves hundreds of millions of dollars a year, mostly by cutting the number of miles driven.</li>
+          <li><strong>Entertainment.</strong> Netflix decides what shows up on your home screen. The company has said that most of what people watch comes from those recommendations, not from searching.</li>
+          <li><strong>Sports.</strong> The Oakland Athletics story told in <em>Moneyball</em> is the classic case. A team with very little money used statistics to pick undervalued players and competed against teams spending several times more. Every major league team now has analysts on staff.</li>
+          <li><strong>Theme parks.</strong> Disney's MagicBand system tracks where guests go and what they buy inside the parks. That data helps Disney manage lines, schedule staff, and stock food and merchandise almost in real time.</li>
+          <li><strong>Retail.</strong> Amazon decides what to stock in which warehouse, what to recommend to you, and what price to charge. All three are analytics problems.</li>
+        </ul>
+
+        <p>None of these are tech companies selling analytics. They are a shipping company, a streaming service, a baseball team, a theme park, and a store. In every case, analytics is something the business does <em>inside itself</em>, run by people who understand that business. That point comes back in section eight.</p>
+      </section>
+
+      <section id="s5">
+        <span class="snum">05</span>
+        <h2>The four pillars</h2>
+
+        <p>Analytics covers everything from a simple report to advanced optimization. The usual way to organize all of it is by the <em>question</em> being asked. Older textbooks list three categories: descriptive, predictive, and prescriptive. This course uses four, splitting out the "why did it happen" question as its own category, because in practice explaining a result is a different job from reporting it.</p>
+
+        <figure>
+          <svg viewBox="0 0 720 400" role="img" aria-labelledby="templeTitle templeDesc">
+            <title id="templeTitle">The analytics temple</title>
+            <desc id="templeDesc">Four pillars labeled Descriptive, Diagnostic, Predictive and Prescriptive stand on a foundation of Data Management and hold up a roof labeled Business Insights.</desc>
+            <polygon points="360,6 700,74 20,74" fill="var(--p3-fill)" opacity="0.42"></polygon>
+            <rect x="20" y="74" width="680" height="52" fill="var(--p3-fill)" opacity="0.42"></rect>
+            <text x="360" y="108" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="30" font-weight="600" fill="var(--ink)" letter-spacing="1">BUSINESS INSIGHTS</text>
+            <g>
+              <rect x="70" y="130" width="120" height="26" rx="5" fill="var(--p1-fill)"></rect>
+              <rect x="86" y="156" width="88" height="150" fill="var(--p1-fill)"></rect>
+              <rect x="70" y="306" width="120" height="26" rx="5" fill="var(--p1-fill)"></rect>
+              <text x="130" y="238" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p1-on)" transform="rotate(-90 130 238)">Descriptive</text>
+            </g>
+            <g>
+              <rect x="230" y="130" width="120" height="26" rx="5" fill="var(--p2-fill)"></rect>
+              <rect x="246" y="156" width="88" height="150" fill="var(--p2-fill)"></rect>
+              <rect x="230" y="306" width="120" height="26" rx="5" fill="var(--p2-fill)"></rect>
+              <text x="290" y="238" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p2-on)" transform="rotate(-90 290 238)">Diagnostic</text>
+            </g>
+            <g>
+              <rect x="390" y="130" width="120" height="26" rx="5" fill="var(--p3-fill)"></rect>
+              <rect x="406" y="156" width="88" height="150" fill="var(--p3-fill)"></rect>
+              <rect x="390" y="306" width="120" height="26" rx="5" fill="var(--p3-fill)"></rect>
+              <text x="450" y="238" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p3-on)" transform="rotate(-90 450 238)">Predictive</text>
+            </g>
+            <g>
+              <rect x="550" y="130" width="120" height="26" rx="5" fill="var(--p4-fill)"></rect>
+              <rect x="566" y="156" width="88" height="150" fill="var(--p4-fill)"></rect>
+              <rect x="550" y="306" width="120" height="26" rx="5" fill="var(--p4-fill)"></rect>
+              <text x="610" y="238" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p4-on)" transform="rotate(-90 610 238)">Prescriptive</text>
+            </g>
+            <rect x="20" y="332" width="680" height="56" fill="var(--p3-fill)" opacity="0.42"></rect>
+            <text x="360" y="368" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="27" font-weight="600" fill="var(--ink)" letter-spacing="1">DATA MANAGEMENT</text>
+          </svg>
+          <figcaption>Four pillars holding up a roof, standing on one foundation. The building only stays up if the foundation holds — which is why data management comes first in this course.</figcaption>
+        </figure>
+
+        <div class="pillars">
+          <div class="pillar p-1">
+            <h4>Descriptive</h4>
+            <span class="q">What happened?</span>
+            <p>Using data to understand what happened in the past, or what is happening right now. A dashboard is the most common form. Most companies start here, and that makes sense — you can't fix a problem you can't see.</p>
+            <p class="ex">What was our revenue in Texas in March 2020? Which factory had the lowest productivity last quarter? How many complaints did we get, how many did we fix, and what were they about?</p>
+          </div>
+          <div class="pillar p-2">
+            <h4>Diagnostic</h4>
+            <span class="q">Why did it happen?</span>
+            <p>One step further. Descriptive tells you Texas sales dropped. Diagnostic figures out <em>why</em> — a price change, a competitor's sale, running out of stock, or unusual weather. This is where you dig into causes.</p>
+            <p class="ex">Why did our on-time delivery rate fall in the Southeast? Which products are dragging down our profit margin?</p>
+          </div>
+          <div class="pillar p-3">
+            <h4>Predictive</h4>
+            <span class="q">What will happen?</span>
+            <p>You look at past data, find patterns in it, and extend those patterns into the future. Past sales become a forecast of future sales. Important limit: a prediction tells you what is likely to happen. It does <em>not</em> tell you what to do about it.</p>
+            <p class="ex">How will customers respond to this ad? How risky is this investment? How many units will we sell in November?</p>
+          </div>
+          <div class="pillar p-4">
+            <h4>Prescriptive</h4>
+            <span class="q">What should we do?</span>
+            <p>This goes past predicting and recommends the best action, usually by testing all the options and scoring each one. Optimization and simulation live here. In practice you build this on top of a prediction, not instead of one.</p>
+            <p class="ex">How much should we produce next month? What's the cheapest way to ship from our factories to our warehouses? Which customers should get the discount?</p>
+          </div>
+        </div>
+
+        <p>Two things about this picture are worth remembering.</p>
+
+        <p>First, the pillars get harder from left to right, but not more important. A company with a great forecasting model and terrible reporting is in worse shape than a company with the opposite problem.</p>
+
+        <p>Second — and this is the main point of the diagram — all four pillars sit on <strong>data management</strong>: collecting, cleaning, organizing, combining, and reshaping raw data. What you can build on top depends entirely on how solid that foundation is.</p>
+      </section>
+
+      <section id="s6">
+        <span class="snum">06</span>
+        <h2>What AI is</h2>
+
+        <p>Ask most people to define AI and they'll name a product — usually ChatGPT. That answer isn't wrong. ChatGPT is AI. But it's like answering "what is a vehicle?" by naming one specific car. True, and misleading if you stop there.</p>
+
+        <p>Instead of picking one definition, compare three from organizations that have good reason to be careful about their words. Notice that they don't quite match.</p>
+
+        <div class="defs">
+          <div class="def">
+            <span class="who">NASA</span>
+            <p>Artificial intelligence refers to computer systems that can perform complex tasks normally done by human reasoning, decision making, creating, and so on. There is no single, simple definition of artificial intelligence, because AI tools are capable of a wide range of tasks and outputs. AI tools at NASA sometimes use machine learning, which uses data and algorithms to train computers to make classifications, generate predictions, or uncover similarities and trends across large datasets.</p>
+          </div>
+          <div class="def">
+            <span class="who">Google</span>
+            <p>Artificial intelligence is a set of technologies that enable computers to perform a variety of advanced functions, including the ability to see, understand and translate spoken and written language, analyze data, make recommendations, and more.</p>
+          </div>
+          <div class="def">
+            <span class="who">IBM</span>
+            <p>Artificial intelligence is technology that enables computers and machines to simulate human learning, comprehension, problem solving, decision making, creativity and autonomy.</p>
+          </div>
+        </div>
+
+        <p>As NASA suggests, <strong>there is no single, simple definition.</strong> AI is a catch-all term for many different techniques that make machines act more like people. The list of things under that umbrella keeps growing.</p>
+
+        <p>The useful takeaway: when a company says "our product uses AI," that sentence tells you almost nothing. Ask what the system actually does.</p>
+
+        <div class="note">
+          <span class="label">Why the definitions differ</span>
+          <p>Each definition highlights a different boundary of the field. Instead of asking whether a tool is "really AI," it is often more useful to ask what capability it provides, what data it uses, how it produces an output, and how much autonomy it has.</p>
+        </div>
+
+        <h3>Two kinds of AI</h3>
+
+        <p>For this course, one split matters most.</p>
+
+        <ul>
+          <li><strong>Traditional AI</strong> analyzes data, finds patterns, and makes predictions or decisions. The slide-reading system in section three is an example. So are fraud detection, demand forecasting, and credit scoring.</li>
+          <li><strong>Generative AI</strong> creates new content — text, images, code, music. ChatGPT and Claude are examples.</li>
+        </ul>
+
+        <p>Both matter and both come up in this course. But when a company talks about using AI to run its operations better, they usually mean the first kind.</p>
+
+        <h3>AI, machine learning, deep learning, and generative AI</h3>
+
+        <p>These terms are related but should not be used interchangeably. Each one sits inside the one before it.</p>
+
+        <figure>
+          <svg viewBox="0 0 720 330" role="img" aria-labelledby="nestTitle nestDesc">
+            <title id="nestTitle">How the four terms nest</title>
+            <desc id="nestDesc">Four nested boxes. Artificial intelligence contains machine learning, which contains deep learning, which contains generative AI.</desc>
+            <rect x="6" y="6" width="708" height="318" rx="8" fill="var(--p3-fill)" opacity="0.16" stroke="var(--p3)" stroke-opacity="0.5"></rect>
+            <text x="28" y="38" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--ink)">Artificial intelligence</text>
+            <rect x="44" y="56" width="632" height="246" rx="8" fill="var(--p3-fill)" opacity="0.20" stroke="var(--p3)" stroke-opacity="0.5"></rect>
+            <text x="66" y="88" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--ink)">Machine learning</text>
+            <rect x="82" y="106" width="556" height="174" rx="8" fill="var(--p1-fill)" opacity="0.20" stroke="var(--p1)" stroke-opacity="0.6"></rect>
+            <text x="104" y="138" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--ink)">Deep learning</text>
+            <rect x="120" y="156" width="480" height="102" rx="8" fill="var(--p4-fill)" opacity="0.24" stroke="var(--p4)" stroke-opacity="0.7"></rect>
+            <text x="142" y="188" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--ink)">Generative AI</text>
+            <text x="142" y="216" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink-2)">Text, images, audio, video, code</text>
+          </svg>
+          <figcaption>Each term is a smaller box inside a bigger one. Generative AI is a kind of deep learning, deep learning is a kind of machine learning, and machine learning is one way of doing AI.</figcaption>
+        </figure>
+
+        <div class="defs">
+          <div class="def">
+            <span class="who">Artificial intelligence</span>
+            <p>The broad umbrella. It includes different approaches for making machines perform tasks that appear intelligent or support intelligent behavior.</p>
+          </div>
+          <div class="def">
+            <span class="who">Machine learning</span>
+            <p>A subset of AI in which a model learns patterns from data rather than relying only on rules written explicitly by a programmer.</p>
+          </div>
+          <div class="def">
+            <span class="who">Deep learning</span>
+            <p>A subset of machine learning that uses neural networks with many layers. It is especially useful for complex data such as images, audio, and language.</p>
+          </div>
+          <div class="def">
+            <span class="who">Generative AI</span>
+            <p>Uses models, commonly deep-learning foundation models, to create new content such as text, images, audio, video, or code in response to an input.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="s7">
+        <span class="snum">07</span>
+        <h2>How AI and analytics fit together</h2>
+
+        <p>People often treat AI and analytics as either rivals or as the same thing with different names. Neither is right.</p>
+
+        <p>Analytics turns data into descriptive, diagnostic, predictive, and prescriptive insight, using statistics, computing, and optimization. That's the building from section five. AI <em>adds a floor on top</em>. It can find more complicated patterns, make harder predictions, and handle <strong>unstructured</strong> data as well as structured data.</p>
+
+        <p>Structured data fits in rows and columns — a sales table, a customer list. Unstructured data doesn't: photos, emails, recorded calls, contracts, video. Until recently that material was nearly impossible to analyze at any real scale.</p>
+
+        <figure>
+          <svg viewBox="0 0 720 430" role="img" aria-labelledby="temple2Title temple2Desc">
+            <title id="temple2Title">The analytics temple with an AI layer</title>
+            <desc id="temple2Desc">The same four pillars and data management foundation, but the roof now reads AI-based Decision Making using reinforcement learning, neural networks and large language models, and the foundation is annotated with cleaning, aggregation, organization and transformation.</desc>
+            <polygon points="360,6 700,70 20,70" fill="var(--p3-fill)" opacity="0.42"></polygon>
+            <rect x="20" y="70" width="680" height="76" fill="var(--p3-fill)" opacity="0.42"></rect>
+            <text x="360" y="100" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="24" font-weight="600" fill="var(--accent)">AI-based Decision Making</text>
+            <text x="360" y="130" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--accent)">Reinforcement Learning &middot; Neural Networks &middot; LLMs</text>
+            <g>
+              <rect x="70" y="150" width="120" height="26" rx="5" fill="var(--p1-fill)"></rect>
+              <rect x="86" y="176" width="88" height="140" fill="var(--p1-fill)"></rect>
+              <rect x="70" y="316" width="120" height="26" rx="5" fill="var(--p1-fill)"></rect>
+              <text x="130" y="253" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p1-on)" transform="rotate(-90 130 253)">Descriptive</text>
+            </g>
+            <g>
+              <rect x="230" y="150" width="120" height="26" rx="5" fill="var(--p2-fill)"></rect>
+              <rect x="246" y="176" width="88" height="140" fill="var(--p2-fill)"></rect>
+              <rect x="230" y="316" width="120" height="26" rx="5" fill="var(--p2-fill)"></rect>
+              <text x="290" y="253" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p2-on)" transform="rotate(-90 290 253)">Diagnostic</text>
+            </g>
+            <g>
+              <rect x="390" y="150" width="120" height="26" rx="5" fill="var(--p3-fill)"></rect>
+              <rect x="406" y="176" width="88" height="140" fill="var(--p3-fill)"></rect>
+              <rect x="390" y="316" width="120" height="26" rx="5" fill="var(--p3-fill)"></rect>
+              <text x="450" y="253" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p3-on)" transform="rotate(-90 450 253)">Predictive</text>
+            </g>
+            <g>
+              <rect x="550" y="150" width="120" height="26" rx="5" fill="var(--p4-fill)"></rect>
+              <rect x="566" y="176" width="88" height="140" fill="var(--p4-fill)"></rect>
+              <rect x="550" y="316" width="120" height="26" rx="5" fill="var(--p4-fill)"></rect>
+              <text x="610" y="253" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="19" font-weight="600" fill="var(--p4-on)" transform="rotate(-90 610 253)">Prescriptive</text>
+            </g>
+            <rect x="20" y="342" width="680" height="76" fill="var(--p3-fill)" opacity="0.42"></rect>
+            <text x="360" y="374" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="26" font-weight="600" fill="var(--ink)" letter-spacing="1">DATA MANAGEMENT</text>
+            <text x="360" y="400" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink-2)">Cleaning &middot; Aggregation &middot; Organization &middot; Transformation</text>
+          </svg>
+          <figcaption>Same building, new top floor. Reinforcement learning, neural networks, and large language models raise the ceiling on what the four pillars can do. They don't replace the pillars, and they definitely don't replace the foundation.</figcaption>
+        </figure>
+
+        <p>Notice where AI sits: <em>above</em> the pillars, not below them. It is a more powerful set of tools for predicting and deciding. It is not a replacement for clean, organized, trustworthy data. If a salesperson tells you their AI product means you can skip the data work, they are wrong.</p>
+      </section>
+
+      <section id="s8">
+        <span class="snum">08</span>
+        <h2>AI and jobs</h2>
+
+        <p>AI is changing the job market rather than simply wiping jobs out. But the change is not spread evenly, and three patterns are worth stating separately.</p>
+
+        <ul>
+          <li>In some industries, the <strong>total number of jobs</strong> in AI-exposed work is going down.</li>
+          <li>That drop is concentrated in <strong>entry-level jobs</strong> — the repetitive, data-handling work that new graduates used to do, and that software can now handle well enough.</li>
+          <li>At the same time, <strong>middle-management jobs are growing</strong>, because companies need people who can read what these systems produce, decide what to do with it, and work between the technical team and the business side.</li>
+        </ul>
+
+        <p>There is solid evidence for the second point. Hosseini Maasoum and Lichtinger studied U.S. résumés and job postings from 2015 to 2025. At companies that adopted generative AI, junior employment dropped about <strong>9% within a year and a half</strong>, and the drop was largest in the jobs most exposed to the technology. Senior employment at the same companies barely moved.</p>
+
+        <p>One detail changes how you should read that. The drop came from <em>slower hiring</em>, not from layoffs. Companies weren't firing junior employees. They just stopped replacing the ones who left.</p>
+
+        <h3>What employers are looking for</h3>
+
+        <p>The pattern points toward jobs that need judgment rather than jobs that just need execution. Employers increasingly want people who have:</p>
+
+        <ul>
+          <li><strong>Real knowledge of the business.</strong> Understanding the situation the model is being used in, not just the model itself.</li>
+          <li><strong>A sense of what makes a decision good.</strong> Being able to tell a good decision from a bad one, separate from whether it happened to work out.</li>
+          <li><strong>An eye for where AI goes wrong.</strong> Knowing when a system is confidently wrong, when its training data was biased, and when it is missing context that matters.</li>
+        </ul>
+
+        <p>This combination is sometimes called the <strong>AI manager</strong>. These people are not necessarily programmers. They understand what AI can and cannot do well enough to decide when it should be used, and they are responsible for making sure it gets used sensibly. The workforce ahead isn't just technology-driven. It's judgment-driven, with people directing AI instead of competing against it.</p>
+      </section>
+
+      <section id="s9">
+        <span class="snum">09</span>
+        <h2>Why AI projects fail</h2>
+
+        <p>Given how much money and excitement goes into AI, you might expect a record of steady success. It isn't. Estimates differ depending on how you count, but studies commonly find that <strong>70% to 80% of AI projects fail to deliver the business value that was expected</strong>. Some findings are harsher. MIT Media Lab's Project NANDA, in an early 2025 report, found that only about 5% of custom enterprise AI tools ever made it out of testing and into real use, and that around 95% of the companies surveyed saw no measurable return at all.</p>
+
+        <p>Read those numbers carefully. They measure whether projects turned into working systems that paid off. They do <em>not</em> mean the algorithms didn't work. That distinction is the whole point of this section. These projects usually fail for management reasons, not technical ones. Six causes come up again and again.</p>
+
+        <ol class="fails">
+          <li><span class="idx">01</span>
+            <div>
+              <h4>The wrong mix of people</h4>
+              <p>Companies hire plenty of data scientists and engineers but forget the AI managers — the project leads and business experts who connect the technical work to what the company is actually trying to do. Without them, teams build things that are impressive and useless.</p>
+            </div>
+          </li>
+          <li><span class="idx">02</span>
+            <div>
+              <h4>Bad data</h4>
+              <p>Garbage in, garbage out. On projects that succeed, something like 60&ndash;80% of the total effort goes into cleaning, combining, and checking data. Teams that rush this step find their models work in testing and fall apart in the real world.</p>
+            </div>
+          </li>
+          <li><span class="idx">03</span>
+            <div>
+              <h4>The company isn't ready</h4>
+              <p>Using AI is a workflow problem, not just a technical one. Many companies have no standard way to move data around, no version control for their models, and no habit of technical and business teams working together. Without that groundwork, even a good solution never scales past a pilot.</p>
+            </div>
+          </li>
+          <li><span class="idx">04</span>
+            <div>
+              <h4>Picking the wrong problem</h4>
+              <p>Teams often choose the flashy project that looks good in a presentation, then expect it to pay for itself in three to six months. The better question is boring: can AI actually add measurable value <em>here</em>? Projects succeed when they target a real problem the company already has.</p>
+            </div>
+          </li>
+          <li><span class="idx">05</span>
+            <div>
+              <h4>No oversight until it's too late</h4>
+              <p>Checks for fairness, bias, and legal compliance often get pushed to the end, when fixing anything is most expensive. Waiting creates legal risk, damage to the company's reputation, and unfair outcomes for real people. These checks need to start early, not after something goes wrong.</p>
+            </div>
+          </li>
+          <li><span class="idx">06</span>
+            <div>
+              <h4>Trusting the vendor too much</h4>
+              <p>Companies believe what a vendor promises without understanding how the model works or what it will really cost to connect it to their systems. Every company's data and workflow is different, and no off-the-shelf product fits perfectly. You need enough in-house knowledge to judge what you're buying.</p>
+            </div>
+          </li>
+        </ol>
+
+        <p>Look at what's missing from that list. Not one of the six is a math problem. They are problems of planning, data discipline, organization, oversight, and leadership — the kind of thing a well-trained business student is better placed to fix than a specialist in model design.</p>
+      </section>
+
+      <section id="gloss">
+        <span class="snum">Reference</span>
+        <h2>Key terms</h2>
+
+        <dl class="gloss">
+          <div><dt>Business analytics</dt><dd>The scientific process of turning data into insights that help people make better decisions.</dd></div>
+          <div><dt>Data management</dt><dd>Collecting, cleaning, organizing, combining, and reshaping raw data so it can be analyzed. The foundation the four pillars stand on.</dd></div>
+          <div><dt>Descriptive analytics</dt><dd>Using data to understand what happened in the past or what is happening now. Reports and dashboards.</dd></div>
+          <div><dt>Diagnostic analytics</dt><dd>Figuring out <em>why</em> something happened — digging into causes rather than just reporting results.</dd></div>
+          <div><dt>Predictive analytics</dt><dd>Finding patterns in past data and extending them into the future to forecast what will happen. Gives a forecast, not a recommendation.</dd></div>
+          <div><dt>Prescriptive analytics</dt><dd>Working out the best action to take, usually through optimization or simulation. Normally built on top of a prediction.</dd></div>
+          <div><dt>Actionable insight</dt><dd>A finding specific enough that someone can do something different because of it. The goal of the whole process.</dd></div>
+          <div><dt>Artificial intelligence</dt><dd>A catch-all term for techniques that let machines do tasks normally needing human thinking, judgment, or creativity. There is no single agreed definition.</dd></div>
+          <div><dt>Machine learning</dt><dd>A part of AI that uses data and algorithms to train computers to sort things into categories, make predictions, or find patterns in large datasets.</dd></div>
+          <div><dt>Traditional AI</dt><dd>AI that analyzes data, finds patterns, and makes predictions or decisions. Fraud detection, demand forecasting, image recognition.</dd></div>
+          <div><dt>Generative AI</dt><dd>AI that creates new content — text, images, code, music.</dd></div>
+          <div><dt>Structured data</dt><dd>Data that fits into rows and columns, like a sales table or a customer list. What Excel is built for.</dd></div>
+          <div><dt>Unstructured data</dt><dd>Data with no rows-and-columns form — photos, emails, audio, video. Hard to analyze at scale until recently, and a big part of what modern AI opened up.</dd></div>
+          <div><dt>AI manager</dt><dd>Someone who understands what AI can and cannot do well enough to decide when and how it should be used, and to keep that use lined up with the company's goals. Not necessarily a programmer.</dd></div>
+          <div><dt>Decision support tool</dt><dd>A carefully built application made for a specific business situation and designed to be handed off so non-experts can use it. What you'll build in this course.</dd></div>
+        </dl>
+      </section>
+
+      <footer>
+        <p><strong>Sources.</strong> Brynjolfsson, Hitt &amp; Kim, "Strength in Numbers: How Does Data-Driven Decisionmaking Affect Firm Performance?" (2011) &mdash; the 5&ndash;6% productivity figure. Beck et al., Camelyon16 / ISBI 2016, written up by Harvard Medical School as <a href="https://hms.harvard.edu/news/better-together">"Better Together"</a> &mdash; the 92 / 96 / 99.5% results. Hosseini Maasoum &amp; Lichtinger, "Generative AI as Seniority-Biased Technological Change" (2025) &mdash; the 9% drop in junior employment. MIT Media Lab Project NANDA, "The GenAI Divide: State of AI in Business 2025" &mdash; the 5% and 95% figures.</p>
+        <p>BUSOBA 3331 / 4331 &mdash; Tactics of Analytical Discovery &mdash; Fall 2026 &mdash; Rakesh Mallipeddi &mdash; The Ohio State University</p>
+      </footer>
+
+    </article>
+  </div>
+</div>
+
+</body>
+</html>
